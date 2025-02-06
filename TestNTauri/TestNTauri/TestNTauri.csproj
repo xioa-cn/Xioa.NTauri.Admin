@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+        <ApplicationIcon>favicon.ico</ApplicationIcon>
+        <PackageType>Template</PackageType>
+        <Version>1.0.3</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NTauri.WPF\NTauri.WPF.csproj" />
+      <ProjectReference Include="..\VueDemo\VueDemo.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Management" Version="7.0.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3079-prerelease" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="vue.config" />
+    </ItemGroup>
+
+  
+
+</Project>
