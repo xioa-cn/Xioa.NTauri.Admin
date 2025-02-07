@@ -2,10 +2,10 @@
 import LoginForm from '@/components/login/LoginForm.vue';
 import { ref, onMounted } from 'vue';
 const backgroundImages = [
-    '/assets/0.jpg',
-    '/assets/2.jpg',
-    '/assets/6.jpg',
-    '/assets/9.jpg'
+    '/0.jpg',
+    '/2.jpg',
+    '/6.jpg',
+    '/9.jpg'
 ];
 
  function getRandomBackground(): string {
@@ -13,7 +13,7 @@ const backgroundImages = [
     return backgroundImages[randomIndex];
 }
 
-const backgroundImage = ref('/assets/9.jpg');
+const backgroundImage = ref('/9.jpg');
 
 onMounted(() => {
     backgroundImage.value = getRandomBackground();
