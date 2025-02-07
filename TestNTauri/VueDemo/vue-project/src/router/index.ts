@@ -8,24 +8,32 @@ const router = createRouter({
       path: '/',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
-    },
+    }, 
     {
-      path: '/main',
-      name: 'main',
-      component : ()=>import('../views/MainView.vue'),
-      children: [
+      path: '/base',
+      name: 'base',
+      component: () => import('../views/MainBaseView.vue'),
+      children:[
         {
-          path: '/main/welcome',
-          name: 'welcome',
-          component: () => import('../views/welcome.vue'),
+          path: '/main',
+          name: 'main',
+          component: () => import('../views/MainView.vue'),
+          children: [
+            {
+              path: '/main/welcome',
+              name: 'welcome',
+              component: () => import('../views/welcome.vue'),
+            },
+            {
+              path: '/main/plot',
+              name: 'plot',
+              component: () => import('../views/PlotView.vue'),
+            },
+          ],
         },
-        {
-          path: '/main/plot',
-          name: 'plot',
-          component: () => import('../views/PlotView.vue'),
-        },
-      ],
+      ]
     },
+   
   ],
 })
 
