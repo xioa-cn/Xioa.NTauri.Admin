@@ -32,7 +32,7 @@ import { NButton, NLayoutContent } from 'naive-ui'
 }
 
 .welcome-container {
-  height: calc(100vh - 156px); /* 减去头部和底部的总高度 */
+  height: calc(100vh - 144px); /* 减去头部和底部的总高度 */
   width: 100%;
   display: flex;
   justify-content: center;

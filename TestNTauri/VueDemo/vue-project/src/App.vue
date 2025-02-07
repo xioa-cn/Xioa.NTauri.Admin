@@ -1,87 +1,121 @@
 <script setup lang="ts">
-import {
-  NConfigProvider, NLayout, NLayoutHeader, NLayoutSider,
-  NLayoutContent, NLayoutFooter, NDialogProvider
-} from 'naive-ui'
-import { createTheme, inputDark, datePickerDark } from 'naive-ui'
-import { zhCN, dateZhCN } from 'naive-ui'
-import Header from './components/main/header.vue'
-import Footer from './components/main/footer.vue'
-import Nav from './components/main/nav.vue'
+import { RouterView } from 'vue-router'
 import { ref } from 'vue'
+import usePostMessage from '@/ntauri/usePostMessage'
+import {
+  RemoveOutline,
+  CloseOutline,
+  ScanOutline,
+  RepeatOutline
+} from '@vicons/ionicons5'
+import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NButton, NIcon, NMessageProvider } from 'naive-ui'
+import Header from '@/components/main/header.vue'
 
-const darkTheme = createTheme([inputDark, datePickerDark])
 
-const navRef = ref()
-const collapsed = ref(false)
+const isMaximized = ref(false)
+
+// 最小化窗口
+const handleMinimize = async () => {
+  usePostMessage("minWindow", null);
+}
+
+// 最大化/还原窗口
+const handleMaximize = async () => {
+  if (isMaximized.value) {
+    usePostMessage("normalWindow", null);
+  } else {
+    usePostMessage("maxWindow", null);
+  }
+  isMaximized.value = !isMaximized.value;
+}
+
+// 关闭窗口
+const handleClose = async () => {
+  usePostMessage("closeWindow", null);
+}
+
+
 </script>
 
 <template>
-  <n-config-provider :theme="darkTheme" :locale="zhCN" :date-locale="dateZhCN"
-    :theme-overrides="{ common: { fontWeightStrong: '600' } }">
-    <n-dialog-provider>
-      <n-layout class="layout-container">
-        <n-layout-header class="header" bordered>
-          <Header />
+  <n-config-provider class="app-container">
+    <n-message-provider>
+      <n-layout>
+        <n-layout-header class="header">
+          <div class="move-window titlebar drag-region">
+            <Header />
+          </div>
+          <div class="window-controls-container">
+            <div class="window-controls">
+              <n-button quaternary circle size="small" @click="handleMinimize">
+                <template #icon>
+                  <n-icon>
+                    <RemoveOutline />
+                  </n-icon>
+                </template>
+              </n-button>
+              <n-button quaternary circle size="small" @click="handleMaximize">
+                <template #icon>
+                  <n-icon>
+                    <RepeatOutline v-if="isMaximized" />
+                    <ScanOutline v-else />
+                  </n-icon>
+                </template>
+              </n-button>
+              <n-button quaternary circle size="small" @click="handleClose">
+                <template #icon>
+                  <n-icon>
+                    <CloseOutline />
+                  </n-icon>
+                </template>
+              </n-button>
+            </div>
+          </div>
         </n-layout-header>
-        <n-layout has-sider position="absolute" class="main-content">
-          <n-layout-sider
-            bordered
-            collapse-mode="width"
-            :collapsed-width="64"
-            :width="240"
-            :collapsed="collapsed"
-            show-trigger
-            @collapse="collapsed = true"
-            @expand="collapsed = false"
-          >
-            <Nav :collapsed="collapsed" />
-          </n-layout-sider>
-          <n-layout style="padding: 14px;" :native-scrollbar="false">
-            <RouterView />
-          </n-layout>
-        </n-layout>
-        <n-layout-footer class="footer" bordered>
-          <Footer />
-        </n-layout-footer>
+        <RouterView />
       </n-layout>
-    </n-dialog-provider>
+    </n-message-provider>
   </n-config-provider>
 </template>
 
 <style scoped>
-.layout-container {
+.header {
+  height: 48px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.app-container {
   height: 100vh;
   width: 100vw;
 }
 
-.header {
-  height: 64px;
-  padding: 24px;
-}
-
-.main-content {
-  width: auto;
-  top: 64px;
-  bottom: 64px;
-}
-
-.footer {
-  height: 64px;
-  padding: 24px;
+.move-window {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
+  bottom: 0;
+  -webkit-app-region: drag;
+  z-index: 1;
 }
-</style>
 
-<style>
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: black;
+.window-controls-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+  z-index: 1;
+}
+
+.window-controls {
+  display: flex;
+  gap: 4px;
+  -webkit-app-region: no-drag;
 }
 </style>

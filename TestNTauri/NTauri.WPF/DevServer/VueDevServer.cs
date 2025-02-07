@@ -14,6 +14,8 @@ namespace NTauri.WPF.DevServer
 
         public VueDevServer(string vuePath, StartupMode startupMode, int port = 3000)
         {
+            
+            KillProcessByPort(port);
             NTauriConfig.NtauriConfig = new NTauriConfigModel()
             {
                 VueProjectPath = vuePath,

@@ -22,9 +22,24 @@ namespace TestNTauri
 
         public static AppWindowsWebView WebView { get; private set; }
         protected override async void OnStartup(StartupEventArgs e) {
+            // 设置全局异常处理
+            AppDomain.CurrentDomain.UnhandledException += (s, args) =>
+            {
+                Console.WriteLine(args.ExceptionObject.ToString());
+               
+            };
+
+            Current.DispatcherUnhandledException += (s, args) =>
+            {
+                Console.WriteLine(args.Exception.ToString());
+                //args.Handled = true;
+            };
+
+            
+            
             WebView = new AppWindowsWebView();
             await WebView.StartupVueServer(
-                AppConfig.VueProjectPath, StartupMode.DevServer, AppConfig.VueDevServerPort);
+                AppConfig.VueProjectPath, StartupMode.DevServer, AppConfig.VueDevServerPort,ViewModelLocator.ViewModelsMethods);
             //TestViewModel vm = new TestViewModel();
             
             base.OnStartup(e);

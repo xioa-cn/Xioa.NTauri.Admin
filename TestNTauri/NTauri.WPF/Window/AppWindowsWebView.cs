@@ -15,7 +15,7 @@ namespace NTauri.WPF.Window
         public WindowsWebView? WindowsWebView;
         public VueDevServer _vueServer;
 
-        public async Task StartupVueServer(string? path, StartupMode? startupMode, int port)
+        public async Task StartupVueServer(string? path, StartupMode? startupMode, int port,Dictionary<string, object>? args = null)
         {
             _vueServer = new VueDevServer(
                 path,
@@ -23,7 +23,7 @@ namespace NTauri.WPF.Window
                 port
             );
             await
-                VueServerStartAsync();
+                VueServerStartAsync(args);
         }
 
         public async Task StartupVueServer()
@@ -33,10 +33,11 @@ namespace NTauri.WPF.Window
                 VueServerStartAsync();
         }
 
-        private async Task VueServerStartAsync()
+        private async Task VueServerStartAsync(Dictionary<string, object>? args = null)
         {
             MainWindow = new MainWindow();
             WindowsWebView = new WindowsWebView(MainWindow.webView);
+            WindowsWebView.WebviewMethods = args;
             // 启动 Vue 开发服务器
             await _vueServer.StartAsync();
             MainWindow.Closing += async (sender, args) =>
@@ -53,16 +54,12 @@ namespace NTauri.WPF.Window
             MainWindow.Show();
             if (WindowsWebView is not null)
             {
-                WindowsWebView.AddListenerWindow(MainWindow);
                 await WindowsWebView.InitializeAsync();
+                WindowsWebView.AddListenerWindow(MainWindow);
+                
                 await WindowsWebView.LoadUrlAsync(
                     $"http://localhost:{NTauriConfig.NtauriConfig.VueDevServerPort}/");
                 await WindowsWebView.SendMessageAsync("message", "Hello from C#!");
-                WindowsWebView.WebMessageReceived += (sender, s) =>
-                {
-                    Console.WriteLine(sender);
-                    Console.WriteLine(s);
-                };
             }
         }
     }

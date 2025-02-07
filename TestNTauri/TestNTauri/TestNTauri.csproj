@@ -8,6 +8,8 @@
         <UseWPF>true</UseWPF>
         <ApplicationIcon>favicon.ico</ApplicationIcon>
         <PackageType>Template</PackageType>
+        <EnableComHosting>true</EnableComHosting>
+        <ComInterfaceType>ComObject</ComInterfaceType>
         <Version>1.0.3</Version>
     </PropertyGroup>
 
