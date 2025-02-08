@@ -10,6 +10,18 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     }, 
     {
+      path: '/blog',
+      name: 'blog',
+      component: () => import('../views/blogbase.vue'),
+      children:[
+        {
+          path: '',
+          name: 'blogindex',
+          component: () => import('../views/blogindex.vue'),         
+        },
+      ],
+    },
+    {
       path: '/base',
       name: 'base',
       component: () => import('../views/MainBaseView.vue'),

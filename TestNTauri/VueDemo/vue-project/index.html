@@ -5,9 +5,68 @@
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vite App</title>
+    <style>
+      .particle {
+        position: fixed;
+        border-radius: 50%;
+        pointer-events: none;
+        animation: particle 0.6s ease-out forwards;
+      }
+      
+      @keyframes particle {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--x), var(--y)) scale(0);
+          opacity: 0;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
+    <script>
+      document.addEventListener('click', function(e) {
+        const colors = ['#FF69B4', '#4169E1', '#32CD32', '#FFD700']; // 粉、蓝、绿、黄
+        const particleCount = 12; // 每次点击产生的粒子数量
+        
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'particle';
+          
+          // 随机大小
+          const size = Math.random() * 8 + 4;
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          
+          // 随机颜色
+          particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          
+          // 设置初始位置为点击位置
+          particle.style.left = `${e.clientX}px`;
+          particle.style.top = `${e.clientY}px`;
+          
+          // 随机角度和距离
+          const angle = (i / particleCount) * 360 * (Math.PI / 180);
+          const velocity = Math.random() * 80 + 50;
+          const x = Math.cos(angle) * velocity;
+          const y = Math.sin(angle) * velocity;
+          
+          // 设置移动距离
+          particle.style.setProperty('--x', `${x}px`);
+          particle.style.setProperty('--y', `${y}px`);
+          
+          document.body.appendChild(particle);
+          
+          // 动画结束后移除粒子
+          particle.addEventListener('animationend', () => {
+            particle.remove();
+          });
+        }
+      });
+    </script>
   </body>
 </html>

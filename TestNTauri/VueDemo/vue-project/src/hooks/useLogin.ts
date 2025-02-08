@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router';
 import { useMessage } from 'naive-ui';
 import type { LoginParams, LoginClass, LoginResult } from '@/types/logintypes';
 import { webviewInvoke } from '@/utils/webviewMethods';
+import { getLoginSwitch } from '@/utils/loginswitch';
 
 export default function useLogin() {
     const message = useMessage();
@@ -17,7 +18,7 @@ export default function useLogin() {
 
         var result = webviewInvoke<LoginResult>("loginService", "Login", loginParams.value);
         if (result?.success) {
-            router.push('/main/welcome');
+            router.push(getLoginSwitch() as string);
         } else {
             message.error(result?.message);
         }
