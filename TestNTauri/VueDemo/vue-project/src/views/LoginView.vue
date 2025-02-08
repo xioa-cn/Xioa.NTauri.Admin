@@ -8,22 +8,29 @@ const backgroundImages = [
     '/9.jpg'
 ];
 
- function getRandomBackground(): string {
+function getRandomBackground(): string {
     const randomIndex = Math.floor(Math.random() * backgroundImages.length);
     return backgroundImages[randomIndex];
 }
 
 const backgroundImage = ref('/9.jpg');
 
-onMounted(() => {
+const refreshBackground = () => {
     backgroundImage.value = getRandomBackground();
+}
+
+onMounted(() => {
+    refreshBackground();
 });
 </script>
 
 <template>
-    <div class="login-container" :style="{ backgroundImage: `url(${backgroundImage})` }">
+    <div @dblclick="refreshBackground" class="login-container" :style="{
+        backgroundImage: `url(${backgroundImage})`
+    }">
         <div class="login-float titlebar drag-region"></div>
         <LoginForm />
+
     </div>
 </template>
 
@@ -39,6 +46,7 @@ onMounted(() => {
     height: 100vh;
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
     z-index: 1000;
 }
 
@@ -52,5 +60,4 @@ onMounted(() => {
     -webkit-app-region: drag;
     z-index: 1001;
 }
-
 </style>

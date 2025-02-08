@@ -10,7 +10,7 @@ import {
 } from '@vicons/ionicons5'
 import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NButton, NIcon, NMessageProvider } from 'naive-ui'
 import Header from '@/components/main/header.vue'
-
+import { useRoot } from '@/hooks/useRoot';
 
 const isMaximized = ref(false)
 
@@ -18,6 +18,8 @@ const isMaximized = ref(false)
 const handleMinimize = async () => {
   usePostMessage("minWindow", null);
 }
+
+
 
 // 最大化/还原窗口
 const handleMaximize = async () => {
@@ -27,6 +29,8 @@ const handleMaximize = async () => {
     usePostMessage("maxWindow", null);
   }
   isMaximized.value = !isMaximized.value;
+  
+  
 }
 
 // 关闭窗口
@@ -34,6 +38,7 @@ const handleClose = async () => {
   usePostMessage("closeWindow", null);
 }
 
+const root = useRoot();
 
 </script>
 
@@ -45,7 +50,7 @@ const handleClose = async () => {
           <div class="move-window titlebar drag-region">
             <Header />
           </div>
-          <div class="window-controls-container">
+          <div class="window-controls-container" v-if="root">
             <div class="window-controls">
               <n-button quaternary circle size="small" @click="handleMinimize">
                 <template #icon>

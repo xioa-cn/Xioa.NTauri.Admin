@@ -1,93 +1,93 @@
 <script setup lang="ts">
-import  usePostMessage  from '@/ntauri/usePostMessage'
+import usePostMessage from '@/ntauri/usePostMessage'
 import useLogin from '@/hooks/useLogin';
 import { useGenerateNumericCode } from '@/hooks/usegenerateNumericCode';
 import { onMounted } from 'vue';
 import { useMessage } from 'naive-ui';
 import { useRegister } from '@/hooks/useRegister';
-const {codeImage,refreshCode,validateCode} = useGenerateNumericCode();
-onMounted(()=>{
+const { codeImage, refreshCode, validateCode } = useGenerateNumericCode();
+onMounted(() => {
     refreshCode();
 })
 const message = useMessage();
-const {registerParams,code,registerUser} = useRegister();
-const register = ()=>{
-   if(validateCode(code.value)) {
-    if(registerUser()){
-        toggleForm();  
-        code.value = '';
+const { registerParams, code, registerUser } = useRegister();
+const register = () => {
+    if (validateCode(code.value)) {
+        if (registerUser()) {
+            toggleForm();
+            code.value = '';
+        }
+        refreshCode();
+    } else {
+        message.error('验证码错误');
     }
-    refreshCode();
-   }else{
-    message.error('验证码错误');
-   }
 }
 
-const {loginParams,login,isLogin} = useLogin();
+const { loginParams, login, isLogin } = useLogin();
 
 const toggleForm = () => {
     isLogin.value = !isLogin.value;
 }
 
 const closeApplication = () => {
-    usePostMessage('closeWindow',null);
+    usePostMessage('closeWindow', null);
 }
 
 </script>
 
 <template>
-   <div class="login-box">
-            <div class="login-left" :class="{ 'register-mode': !isLogin }">
-                <div class="form-container">
-                    <template v-if="isLogin">
-                        <h2>登录</h2>
-                        <div class="form-group">
-                            <input v-model="loginParams.username" type="text" placeholder="用户名/邮箱/手机号" class="input-field" />
-                        </div>
-                        <div class="form-group">
-                            <input v-model="loginParams.password" type="password" placeholder="密码" class="input-field" />
-                        </div>
-                        <div class="form-footer">
-                            <a href="#" class="forgot-password">修改密码?</a>
-                        </div>
-                        <button class="login-button" @click="login">登录</button>
-                    </template>
-                    <template v-else>
-                        <h2>注册</h2>
-                        <div class="form-group">
-                            <input v-model="registerParams.username" type="text" placeholder="用户名" class="input-field" />
-                        </div>
-                        <div class="form-group">
-                            <input v-model="registerParams.password" type="password" placeholder="密码" class="input-field" />
-                        </div>
-                        <div class="form-group">
-                            <input v-model="registerParams.email" type="email" placeholder="邮箱" class="input-field" />
-                        </div>
-                        <div class="form-group verification-group">
-                            <input v-model="code" type="text" placeholder="验证码" class="input-field verification-input" />
-                            <img :src="codeImage" alt="验证码" class="verification-image" />
-                            <button class="verification-button" @click="refreshCode">刷新验证码</button>
-                        </div>
-                        <button class="login-button" @click="register">注册</button>
-                    </template>
-                </div>
-            </div>
-            <div class="login-right" :class="{ 'register-mode': !isLogin }">
-                <h2>{{ isLogin ? '没有帐号?' : '已有帐号?' }}</h2>
-                <p>{{ isLogin ? '立即注册吧 😃' : '请登录吧 🎉' }}</p>
-                <button class="register-button" @click="toggleForm">
-                    {{ isLogin ? '注册' : '登录' }}
-                </button>
-                <button v-show="isLogin" class="register-button" @click="closeApplication">
-                   退出
-                </button>
+    <div class="login-box">
+        <div class="login-left" :class="{ 'register-mode': !isLogin }">
+            <div class="form-container">
+                <template v-if="isLogin" >
+                    <h2 class="AwesomeFont">登录</h2>
+                    <div  class="form-group AwesomeFont">
+                        <input v-model="loginParams.username" type="text" placeholder="用户名/邮箱/手机号"
+                            class="input-field" />
+                    </div>
+                    <div class="form-group AwesomeFont">
+                        <input v-model="loginParams.password" type="password" placeholder="密码" class="input-field" />
+                    </div>
+                    <div class="form-footer AwesomeFont">
+                        <a href="#" class="forgot-password">修改密码?</a>
+                    </div>
+                    <button class="login-button AwesomeFont" @click="login">登录</button>
+                </template>
+                <template v-else>
+                    <h2 class="AwesomeFont">注册</h2>
+                    <div class="form-group AwesomeFont">
+                        <input v-model="registerParams.username" type="text" placeholder="用户名" class="input-field" />
+                    </div>
+                    <div class="form-group AwesomeFont">
+                        <input v-model="registerParams.password" type="password" placeholder="密码" class="input-field" />
+                    </div>
+                    <div class="form-group AwesomeFont">
+                        <input v-model="registerParams.email" type="email" placeholder="邮箱" class="input-field" />
+                    </div>
+                    <div class="form-group AwesomeFont verification-group">
+                        <input v-model="code" type="text" placeholder="验证码" class="input-field verification-input" />
+                        <img :src="codeImage" alt="验证码" class="verification-image" />
+                        <button class="verification-button AwesomeFont" @click="refreshCode">刷新</button>
+                    </div>
+                    <button class="login-button AwesomeFont" @click="register">注册</button>
+                </template>
             </div>
         </div>
+        <div class="login-right" :class="{ 'register-mode': !isLogin }">
+            <h2 class="AwesomeFont">{{ isLogin ? '没有帐号?' : '已有帐号?' }}</h2>
+            <p class="AwesomeFont">{{ isLogin ? '立即注册吧 😃' : '请登录吧 🎉' }}</p>
+            <button class="register-button AwesomeFont" @click="toggleForm">
+                {{ isLogin ? '注册' : '登录' }}
+            </button>
+            <button v-show="isLogin" class="register-button AwesomeFont" @click="closeApplication">
+                退出
+            </button>
+        </div>
+    </div>
 </template>
 
 
 <style scoped>
-
 .login-box {
     display: flex;
     background: rgba(255, 255, 255, 0.95);
@@ -182,7 +182,8 @@ h2 {
     color: #f85f73;
 }
 
-.login-button, .register-button {
+.login-button,
+.register-button {
     width: 100%;
     padding: 12px;
     border: none;
@@ -291,5 +292,4 @@ h2 {
     background: white;
     color: #f85f73;
 }
-
 </style>

@@ -2,9 +2,9 @@
   <n-layout-content class="layout-content">
     <div class="welcome-container">
       <div class="welcome-content">
-        <h1 class="title">Xioa NTauri Admin</h1>
-        <p class="description">基于 Vue 3 和 Naive UI 的后台管理系统</p>
-        <p class="sub-description">使用 C# TypeScript 语言</p>
+        <h1 class="title AwesomeFont">Xioa NTauri Admin</h1>
+        <p class="description AwesomeFont">基于 Vue 3 和 Naive UI 的后台管理系统</p>
+        <p class="sub-description AwesomeFont">使用 C# TypeScript 语言</p>
         <div class="button-group">
           <n-button type="primary" size="large" class="action-button">
             GitHub

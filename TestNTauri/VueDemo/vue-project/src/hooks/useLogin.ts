@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router';
 import { useMessage } from 'naive-ui';
 import type { LoginParams, LoginClass, LoginResult } from '@/types/logintypes';
 import { webviewInvoke } from '@/utils/webviewMethods';
+
 export default function useLogin() {
     const message = useMessage();
     const router = useRouter();
@@ -13,12 +14,15 @@ export default function useLogin() {
 
     const login = () => {
         message.success('登录成功');
-        var result = webviewInvoke<LoginResult>("loginService","Login",loginParams.value);
-        if(result?.success){
+
+        var result = webviewInvoke<LoginResult>("loginService", "Login", loginParams.value);
+        if (result?.success) {
             router.push('/main/welcome');
-        }else{
+        } else {
             message.error(result?.message);
         }
+
+
     }
 
 

@@ -5,7 +5,7 @@
 <template>
     <div class="header">
         <img class="logo" src="@/assets/logo.svg" alt="logo" />
-        <h1 class="title">Xioa.Admin</h1>
+        <h1 class="title AwesomeFont">Xioa.Admin</h1>
     </div>
 </template>
 

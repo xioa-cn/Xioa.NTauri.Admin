@@ -6,3 +6,26 @@
   padding: 0;
   font-weight: normal;
 }
+
+#app body html {
+  background-color: transparent;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--fontColor);
+  font-family: 'Microsoft YaHei', serif;
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+  word-break: break-word;
+}
+
+.AwesomeFont {
+  color: var(--fontColor);
+  font-family: 'FontAwesome' , serif;
+}
+

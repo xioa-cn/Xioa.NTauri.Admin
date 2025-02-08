@@ -10,9 +10,12 @@ using System.Windows.Threading;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Diagnostics;
 
-namespace NTauri.WPF.Window {
-    public partial class MainWindow : System.Windows.Window, IDisposable {
+namespace NTauri.WPF.Window
+{
+    public partial class MainWindow : System.Windows.Window, IDisposable
+    {
         private bool isDragging = false;
         private DateTime lastDragTime = DateTime.MinValue;
         private const int MIN_DRAG_INTERVAL = 50; // 毫秒
@@ -25,7 +28,39 @@ namespace NTauri.WPF.Window {
         private bool _isProcessingQueue = false;
         private readonly object _queueLock = new object();
 
-        public MainWindow() {
+        [DllImport("user32.dll")]
+        private static extern bool GetCursorPos(out POINT lpPoint);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool ReleaseCapture();
+
+        [DllImport("user32.dll", SetLastError = true)]
+        //private static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        public static extern IntPtr PostMessage(IntPtr hWnd, uint wMsg, 
+            UIntPtr wParam, IntPtr lParam);
+        [StructLayout(LayoutKind.Sequential)]
+        private struct POINT
+        {
+            public int X;
+            public int Y;
+        }
+
+        private const uint SWP_NOSIZE = 0x0001;
+        private const uint SWP_NOZORDER = 0x0004;
+        private POINT lastPos;
+        private bool isFirstMove = true;  // 添加标记来识别第一次移动
+
+        public MainWindow()
+        {
             InitializeComponent();
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
@@ -37,7 +72,8 @@ namespace NTauri.WPF.Window {
             KeyDown += MainWindow_KeyDown;
         }
         private void WebView_CoreWebView2InitializationCompleted(object? sender,
-            CoreWebView2InitializationCompletedEventArgs e) {
+            CoreWebView2InitializationCompletedEventArgs e)
+        {
             if (e.IsSuccess)
             {
                 try
@@ -56,56 +92,51 @@ namespace NTauri.WPF.Window {
                         webView2.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                         webView2.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
 
-                        // 修改 JavaScript 代码，确保只执行一次
+                        // 修改 JavaScript 代码，只在鼠标移动时触发
                         webView2.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(@"
                             if (!window._dragInitialized) {
                                 window._dragInitialized = true;
                                 window._lastDragTime = 0;
-                                const THROTTLE_TIME = 100;
+                                window._isDragging = false;
+                                const THROTTLE_TIME = 16;  // 约60fps
 
                                 document.addEventListener('mousedown', (e) => {
-                                    const now = Date.now();
-                                    if (now - window._lastDragTime < THROTTLE_TIME) {
-                                        return;
-                                    }
-                                    window._lastDragTime = now;
+                                    // 只在鼠标左键按下时处理
+                                    if (e.button !== 0) return;  // 0 表示左键
+                                    if(window._isDragging) return;
+                                    window._isDragging = true;
 
                                     let element = e.target;
                                     while (element) {
                                         if (element.classList && 
                                             (element.classList.contains('titlebar') || 
                                              element.classList.contains('drag-region'))) {
+                                            
                                             window.chrome.webview.postMessage(JSON.stringify({
-                                                type: 'dragWindow'
+                                                type: 'dragWindow',
+                                                button: e.button,
+                                                buttons: e.buttons
                                             }));
+                                            console.log('send-drag')
                                             break;
                                         }
                                         element = element.parentElement;
                                     }
                                 });
 
-                                const style = document.createElement('style');
-                                style.textContent = `
-                                    .titlebar, .drag-region {
-                                        -webkit-app-region: drag;
-                                        app-region: drag;
-                                        cursor: move;
-                                    }
-                                `;
-                                if (document.head) {
-                                    document.head.appendChild(style);
-                                } else {
-                                    document.addEventListener('DOMContentLoaded', () => {
-                                        document.head.appendChild(style);
-                                    });
-                                }
+                                document.addEventListener('mouseup', () => {
+                                    // 添加100ms延时后再设置为false
+                                    setTimeout(() => {
+                                        window._isDragging = false;
+                                    }, 100);
+                                });
                             }
                         ");
                     }
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine($"WebView2初始化时发生错误: {exception}");
+                    Debug.WriteLine($"WebView2初始化时发生错误: {exception}");
                 }
             }
             else
@@ -113,7 +144,8 @@ namespace NTauri.WPF.Window {
                 MessageBox.Show($"WebView2 初始化失败: {e.InitializationException.Message}", "错误");
             }
         }
-        private void CoreWebView2_ProcessFailed(object? sender, CoreWebView2ProcessFailedEventArgs e) {
+        private void CoreWebView2_ProcessFailed(object? sender, CoreWebView2ProcessFailedEventArgs e)
+        {
             try
             {
                 Application.Current.Dispatcher.Invoke(() =>
@@ -125,10 +157,11 @@ namespace NTauri.WPF.Window {
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"处理WebView2进程失败时出错: {ex}");
+                Debug.WriteLine($"处理WebView2进程失败时出错: {ex}");
             }
         }
-        private void WebView_NavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e) {
+        private void WebView_NavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
             if (!e.IsSuccess && !isDisposed)
             {
                 Application.Current.Dispatcher.InvokeAsync(async () =>
@@ -140,7 +173,7 @@ namespace NTauri.WPF.Window {
                             return;
                         }
 
-                        Console.WriteLine($"导航失败，错误状态: {e.WebErrorStatus}");
+                        Debug.WriteLine($"导航失败，错误状态: {e.WebErrorStatus}");
 
                         switch (e.WebErrorStatus)
                         {
@@ -149,7 +182,7 @@ namespace NTauri.WPF.Window {
                                 if (navigationRetryCount < MAX_RETRY_COUNT)
                                 {
                                     navigationRetryCount++;
-                                    Console.WriteLine($"连接超时，正在进行第 {navigationRetryCount} 次重试...");
+                                    Debug.WriteLine($"连接超时，正在进行第 {navigationRetryCount} 次重试...");
 
                                     // 使用异步延迟而不是阻塞线程
                                     await Task.Delay(2000 * navigationRetryCount);
@@ -189,7 +222,7 @@ namespace NTauri.WPF.Window {
                                 if (navigationRetryCount < MAX_RETRY_COUNT)
                                 {
                                     navigationRetryCount++;
-                                    Console.WriteLine($"导航失败，正在进行第 {navigationRetryCount} 次重试...");
+                                    Debug.WriteLine($"导航失败，正在进行第 {navigationRetryCount} 次重试...");
                                     Thread.Sleep(1000 * navigationRetryCount);
                                     if (!isDisposed && webView?.CoreWebView2 != null)
                                     {
@@ -208,7 +241,7 @@ namespace NTauri.WPF.Window {
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"处理导航失败时出错: {ex}");
+                        Debug.WriteLine($"处理导航失败时出错: {ex}");
                     }
                 });
             }
@@ -217,10 +250,14 @@ namespace NTauri.WPF.Window {
                 navigationRetryCount = 0;
             }
         }
-        private void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e) {
-            Console.WriteLine($"Task未观察到的异常: {e.Exception}");
+        private void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+        {
+            Debug.WriteLine($"Task未观察到的异常: {e.Exception}");
             e.SetObserved();
         }
+        private const int WM_NCLBUTTONDOWN = 0xA1;
+        private const int HT_CAPTION = 0x2;
+        private object loc = new object();
         private async Task ProcessMessageQueueAsync()
         {
             if (_isProcessingQueue) return;
@@ -259,21 +296,21 @@ namespace NTauri.WPF.Window {
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"处理消息时出错: {ex}");
+                            Debug.WriteLine($"处理消息时出错: {ex}");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"消息队列处理出错: {ex}");
+                Debug.WriteLine($"消息队列处理出错: {ex}");
                 lock (_queueLock)
                 {
                     _isProcessingQueue = false;  // 确保在异常情况下也重置状态
                 }
             }
         }
-        private void CoreWebView2_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
+        private async void CoreWebView2_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             try
             {
@@ -281,31 +318,51 @@ namespace NTauri.WPF.Window {
 
                 if (message?.Type == "dragWindow")
                 {
-                    Application.Current.Dispatcher.Invoke(() =>
+
+                    lock (loc)
                     {
-                        try
+                        Debug.WriteLine(DateTime.Now.ToString() + ":Moving");
+                        Application.Current.Dispatcher.Invoke( () =>
                         {
-                            ReleaseCapture();
-                            SendMessage(new WindowInteropHelper(this).Handle, 0xA1, 0x2, 0);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                    });
+                            try
+                            {
+                                // 使用时
+                                bool success = false;
+                                int error = 0;
+                                success = ReleaseCapture();
+                                Debug.WriteLine("ReleaseCapture");
+                                if (!success)
+                                {
+                                    error = Marshal.GetLastWin32Error();
+                                    Debug.WriteLine($"ReleaseCapture failed with error: {error}");
+                                }
+                                // SendMessage 返回 0 不一定表示失败
+                                PostMessage(new WindowInteropHelper(this).Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                                error = Marshal.GetLastWin32Error();
+                                if (error != 0)
+                                {
+                                    Debug.WriteLine($"SendMessage failed with error: {error}");
+                                }
+
+                             
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Window drag operation failed: {ex}");
+                            }
+                        });
+                        Debug.WriteLine(DateTime.Now.ToString() + ":Moved");
+                    }
+
                 }
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
+                Debug.WriteLine(exception);
             }
         }
-        // Win32 API 声明
-        [DllImport("user32.dll")]
-        public static extern bool ReleaseCapture();
-        [DllImport("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        public void Dispose() {
+        public void Dispose()
+        {
             try
             {
                 isDisposed = true;
@@ -329,10 +386,11 @@ namespace NTauri.WPF.Window {
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Dispose时发生错误: {ex}");
+                Debug.WriteLine($"Dispose时发生错误: {ex}");
             }
         }
-        private async Task NavigateWithTimeoutAsync(string url) {
+        private async Task NavigateWithTimeoutAsync(string url)
+        {
             try
             {
                 if (_navigationCts != null)
@@ -344,7 +402,8 @@ namespace NTauri.WPF.Window {
                 _navigationCts = new CancellationTokenSource();
                 var completionSource = new TaskCompletionSource<bool>();
 
-                void Handler(object? s, CoreWebView2NavigationCompletedEventArgs e) {
+                void Handler(object? s, CoreWebView2NavigationCompletedEventArgs e)
+                {
                     completionSource.TrySetResult(e.IsSuccess);
                 }
 
@@ -367,7 +426,7 @@ namespace NTauri.WPF.Window {
                     if (completedTask != completionSource.Task)
                     {
                         // 导航超时
-                        Console.WriteLine("导航超时");
+                        Debug.WriteLine("导航超时");
                         webView.Stop();
                         // 可以在这里处理超时后的逻辑
                     }
@@ -379,7 +438,7 @@ namespace NTauri.WPF.Window {
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"导航出错: {ex}");
+                Debug.WriteLine($"导航出错: {ex}");
             }
         }
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
@@ -394,7 +453,7 @@ namespace NTauri.WPF.Window {
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"打开开发者工具时出错: {ex}");
+                    Debug.WriteLine($"打开开发者工具时出错: {ex}");
                 }
             }
         }

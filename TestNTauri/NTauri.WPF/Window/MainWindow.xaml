@@ -18,8 +18,8 @@
         
        
         <wv2:WebView2 Grid.Row="1" Name="webView" 
-                      Source="https://www.example.com"
-                      CoreWebView2InitializationCompleted="WebView_CoreWebView2InitializationCompleted"
+                    
+                     
                       />
         <!-- <Button Grid.Row="0"  Width="200" Height="60" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Send">Send</Button> -->
     </Grid>
