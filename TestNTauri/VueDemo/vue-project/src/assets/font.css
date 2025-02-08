@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'FontAwesome';
+    src: 
+         url('@/assets/fonts/HanYiCaiYunTiJian-1.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: block;
+}
