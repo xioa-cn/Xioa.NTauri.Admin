@@ -15,12 +15,14 @@ namespace NTauri.WPF.Window
         public WindowsWebView? WindowsWebView;
         public VueDevServer _vueServer;
 
-        public async Task StartupVueServer(string? path, StartupMode? startupMode, int port,Dictionary<string, object>? args = null)
+        public async Task StartupVueServer(string? path, StartupMode? startupMode, 
+            int port,Dictionary<string, object>? args = null,bool noShell = false)
         {
             _vueServer = new VueDevServer(
                 path,
                 StartupMode.DevServer,
-                port
+                port,
+                noShell
             );
             await
                 VueServerStartAsync(args);

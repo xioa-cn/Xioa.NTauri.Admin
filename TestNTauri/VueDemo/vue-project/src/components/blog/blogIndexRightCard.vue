@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { NButton } from 'naive-ui'
+import blogIndexRightContent from './blogIndexRightContent.vue'
 </script>
 
 <template>
     <div class="right-layout">
         <div class="header">
-            <div class="header-left">
-                <div class="logo-icon">
-
-                </div>
+            <div class="header-left">           
                 <div class="logo-text">XIOA-BLOG</div>
             </div>
             <div class="header-right">
@@ -18,7 +16,7 @@ import { NButton } from 'naive-ui'
             </div>
         </div>
         <div class="content">
-            <!-- 内容区域 -->
+            <blog-index-right-content />
         </div>
     </div>
 </template>

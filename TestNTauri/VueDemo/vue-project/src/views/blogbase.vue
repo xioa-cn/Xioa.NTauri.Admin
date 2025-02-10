@@ -1,28 +1,51 @@
 <script setup lang="ts">
 import BlogHeader from '@/components/blog/blogheader.vue'
-import {ref} from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useblogHeaderText } from '@/hooks/useblogHeaderText'
 import { onMounted } from 'vue'
 import { NButton, NIcon, NBackTop } from 'naive-ui'
-import { 
-  ChevronUpOutline, 
-  HomeOutline,
-  CloseOutline,
-  RepeatOutline ,RemoveOutline
+import {
+    ChevronUpOutline,
+    HomeOutline,
+    CloseOutline,
+    RepeatOutline, RemoveOutline
 } from '@vicons/ionicons5'
 import { useWebViewWindow } from '@/hooks/useWebViewWindow';
+import { useblogIndexGoHome } from '@/hooks/useblogIndexGoHome';
+import { useNoneUserToLogin } from "@/hooks/useNoneUserToLogin.ts";
+import { type RouteLocationNormalizedLoaded } from 'vue-router';
+import live2dtest from '@/components/blog/live2dtest.vue'
 
 const { getText } = useblogHeaderText()
 const text = ref<string>('')
 const showActions = ref(false)
+const { goHome } = useblogIndexGoHome()
+
+const { isCanReader } = useNoneUserToLogin()
+// 本地状态
+const localBanner = ref<boolean>(true)
 
 onMounted(() => {
-    text.value = getText()
+    text.value = getText();
+    isCanReader();
 })
+function shouldAnimate(route: RouteLocationNormalizedLoaded) {
+    console.log(route.path)
+    if (route.path === '/blog' || route.path.includes('/blog/content')
+        || route.path.includes('/blog/ha-')) {
+        localBanner.value = true
+        return true
+    } else {
+        localBanner.value = false
+        return true
+    }
+
+}
 const { handleMinimize, handleMaximize, handleClose } = useWebViewWindow();
 const toggleActions = () => {
-  showActions.value = !showActions.value
+    showActions.value = !showActions.value
 }
+
 </script>
 <template>
     <div class="base-layout">
@@ -30,7 +53,7 @@ const toggleActions = () => {
         <main class="main-content">
             <div class="blog-container">
                 <!-- Banner区域 -->
-                <div class="banner-container">
+                <div v-if="localBanner" class="banner-container">
                     <div class="banner-content">
                         <h1 class="banner-title AwesomeFont">开摆</h1>
                         <div class="banner-text-wrapper">
@@ -43,8 +66,8 @@ const toggleActions = () => {
                     <img src="../assets/blog/blog.jpg" alt="banner" class="banner-image">
                 </div>
 
-                <router-view v-slot="{ Component }">
-                    <transition name="fade" mode="out-in">
+                <router-view v-slot="{ Component, route }">
+                    <transition :name="shouldAnimate(route) ? 'smooth-fade' : ''" mode="out-in">
                         <component :is="Component" />
                     </transition>
                 </router-view>
@@ -52,39 +75,45 @@ const toggleActions = () => {
 
         </main>
         <div class="wave-container">
-            <div class="wave wave1"></div>
-            <div class="wave wave2"></div>
-            <div class="wave wave3"></div>
+            <live2dtest />
         </div>
 
         <!-- 添加固钉按钮组 -->
         <div class="float-buttons" :class="{ 'show-actions': showActions }">
             <div class="action-buttons" v-show="showActions">
-                <n-button circle type="info" class="action-btn">
+                <n-button @click="goHome" circle type="info" class="action-btn">
                     <template #icon>
-                        <n-icon><HomeOutline /></n-icon>
+                        <n-icon>
+                            <HomeOutline />
+                        </n-icon>
                     </template>
                 </n-button>
-               
+
                 <n-button @click="handleMinimize" circle color="#8a2be2" class="action-btn">
                     <template #icon>
-                        <n-icon><RemoveOutline /></n-icon>
+                        <n-icon>
+                            <RemoveOutline />
+                        </n-icon>
                     </template>
                 </n-button>
 
                 <n-button @click="handleMaximize" circle type="warning" class="action-btn">
                     <template #icon>
-                        <n-icon><RepeatOutline /></n-icon>
+                        <n-icon>
+                            <RepeatOutline />
+                        </n-icon>
                     </template>
                 </n-button>
 
                 <n-button @click="handleClose" circle type="error" class="action-btn">
                     <template #icon>
-                        <n-icon><CloseOutline /></n-icon>
+                        <n-icon>
+                            <CloseOutline />
+                        </n-icon>
                     </template>
                 </n-button>
             </div>
-            
+
             <n-button circle type="primary" class="toggle-btn" @click="toggleActions">
                 <template #icon>
                     <n-icon>
@@ -146,7 +175,9 @@ const toggleActions = () => {
     0% {
         width: 0;
     }
-    50%, 100% {
+
+    50%,
+    100% {
         width: 27ch;
     }
 }
@@ -155,6 +186,7 @@ const toggleActions = () => {
     from {
         border-right: 2px solid transparent;
     }
+
     to {
         border-right: 2px solid #fff;
     }
@@ -270,6 +302,7 @@ const toggleActions = () => {
     0% {
         transform: translateX(0) translateZ(0);
     }
+
     100% {
         transform: translateX(-50%) translateZ(0);
     }

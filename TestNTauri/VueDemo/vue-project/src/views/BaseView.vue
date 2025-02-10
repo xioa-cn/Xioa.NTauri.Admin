@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
+import { RouterView, type RouteLocationNormalizedLoaded } from 'vue-router';
 import { useAppStore } from '@/stores/appstore';
 import { NElement } from 'naive-ui';
 
@@ -13,13 +13,21 @@ const beforeEnter = () => {
 const afterEnter = () => {
     document.documentElement.style.overflow = '';
 };
+
+const shouldAnimate = (route: RouteLocationNormalizedLoaded) => {
+    // 只有一级路由才有动画
+    return appStore.routerTransition && route.matched.length === 1;
+    
+    // 或者通过路径判断
+    // return appStore.routerTransition && !route.path.includes('/blog/');
+};
 </script>
 
 <template>
     <RouterView #default="{ Component, route }">
         <n-element class="router-container">
             <transition
-                :name="appStore.routerTransition ? 'smooth-fade' : ''"
+                :name="shouldAnimate(route) ? 'smooth-fade' : ''"
                 mode="out-in"
                 appear
                 @before-enter="beforeEnter"

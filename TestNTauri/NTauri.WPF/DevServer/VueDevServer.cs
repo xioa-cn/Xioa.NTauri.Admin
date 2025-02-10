@@ -4,20 +4,17 @@ using System.Net.Http;
 using System.Reflection;
 using NTauri.WPF.Models;
 
-namespace NTauri.WPF.DevServer
-{
-    public class VueDevServer : IDisposable
-    {
+namespace NTauri.WPF.DevServer {
+    public class VueDevServer : IDisposable {
         private Process? _vueProcess;
         private readonly string _vuePath;
         private readonly int _port;
+        private readonly bool _noShell;
 
-        public VueDevServer(string vuePath, StartupMode startupMode, int port = 3000)
-        {
-            
+        public VueDevServer(string vuePath, StartupMode startupMode, int port = 3000, bool noShell = false) {
+            _noShell = noShell;
             KillProcessByPort(port);
-            NTauriConfig.NtauriConfig = new NTauriConfigModel()
-            {
+            NTauriConfig.NtauriConfig = new NTauriConfigModel() {
                 VueProjectPath = vuePath,
                 StartupMode = startupMode,
                 VueDevServerPort = port
@@ -37,8 +34,7 @@ namespace NTauri.WPF.DevServer
             _port = NTauriConfig.NtauriConfig.VueDevServerPort;
         }
 
-        public VueDevServer()
-        {
+        public VueDevServer() {
             if (NTauriConfig.NtauriConfig is null)
                 throw new ArgumentNullException(nameof(NTauriConfig));
             // 获取项目根目录
@@ -56,8 +52,7 @@ namespace NTauri.WPF.DevServer
             _port = NTauriConfig.NtauriConfig.VueDevServerPort;
         }
 
-        private string GetProjectRootPath()
-        {
+        private string GetProjectRootPath() {
             // 获取当前程序集所在目录
             string currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             DirectoryInfo directory = new DirectoryInfo(currentDir);
@@ -77,8 +72,7 @@ namespace NTauri.WPF.DevServer
             return directory.FullName;
         }
 
-        private string GetNpmPath()
-        {
+        private string GetNpmPath() {
             // 在 Windows 上，npm 通常在这些位置
             var possiblePaths = new[] {
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "nodejs", "npm.cmd"),
@@ -105,8 +99,7 @@ namespace NTauri.WPF.DevServer
             throw new FileNotFoundException("Could not find npm. Please ensure Node.js is installed.");
         }
 
-        private string GetCommandPath(string command)
-        {
+        private string GetCommandPath(string command) {
             var paths = Environment.GetEnvironmentVariable("PATH")?.Split(Path.PathSeparator);
             if (paths == null) return null;
 
@@ -122,8 +115,7 @@ namespace NTauri.WPF.DevServer
             return null;
         }
 
-        public async Task StartAsync()
-        {
+        public async Task StartAsync() {
             try
             {
                 // 确保 Vue 项目目录存在
@@ -138,8 +130,7 @@ namespace NTauri.WPF.DevServer
                 Debug.WriteLine($"Using npm from: {npmPath}");
 
                 // 配置进程启动信息
-                var startInfo = new ProcessStartInfo
-                {
+                var startInfo = new ProcessStartInfo {
                     FileName = npmPath,
                     Arguments = $"run dev -- --port {_port}",
                     WorkingDirectory = _vuePath,
@@ -147,13 +138,18 @@ namespace NTauri.WPF.DevServer
                     RedirectStandardOutput = NTauriConfig.NtauriConfig?.StartupMode != StartupMode.DevServer,
                     RedirectStandardError = NTauriConfig.NtauriConfig?.StartupMode != StartupMode.DevServer,
                     CreateNoWindow = true,
-
                 };
+                if (_noShell)
+                {
+                    startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                }
+
                 if (NTauriConfig.NtauriConfig?.StartupMode == StartupMode.DevServer)
                 {
                     startInfo.FileName = "cmd.exe";
-
-                    startInfo.Arguments = $"/c start start-vue-dev-server.bat {_port}";
+                    startInfo.Arguments = _noShell
+                        ? $"/c start /min /b start-vue-dev-server.bat {_port}"
+                        : $"/c start  start-vue-dev-server.bat {_port}";
                 }
                 else
                 {
@@ -191,8 +187,7 @@ namespace NTauri.WPF.DevServer
             }
         }
 
-        private async Task WaitForServerReadyAsync()
-        {
+        private async Task WaitForServerReadyAsync() {
             using var client = new HttpClient();
             var retryCount = 0;
             const int maxRetries = 30; // 最多等待30秒
@@ -220,8 +215,7 @@ namespace NTauri.WPF.DevServer
             throw new TimeoutException("Vue dev server failed to start in time");
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             try
             {
                 // 关闭指定端口的进程
@@ -252,13 +246,11 @@ namespace NTauri.WPF.DevServer
             }
         }
 
-        private void KillProcessByPort(int port)
-        {
+        private void KillProcessByPort(int port) {
             try
             {
                 // 使用 netstat 命令查找使用指定端口的进程
-                var processStartInfo = new ProcessStartInfo
-                {
+                var processStartInfo = new ProcessStartInfo {
                     FileName = "cmd",
                     Arguments = $"/c netstat -ano | findstr :{port}",
                     UseShellExecute = false,

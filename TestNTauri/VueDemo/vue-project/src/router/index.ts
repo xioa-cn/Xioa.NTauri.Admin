@@ -8,24 +8,44 @@ const router = createRouter({
       path: '/',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
-    }, 
+    },
     {
       path: '/blog',
       name: 'blog',
       component: () => import('../views/blogbase.vue'),
-      children:[
+      children: [
         {
           path: '',
           name: 'blogindex',
-          component: () => import('../views/blogindex.vue'),         
+          component: () => import('../views/blogindex.vue'),
         },
+        {
+          path: '/blog/content',
+          name: 'blogcontent',
+          component: () => import('../views/blogcontent.vue'),
+        },
+        {
+          path: '/blog/leavemessage',
+          name: 'leavemessage',
+          component: () => import('../views/leavemessageView.vue'),
+        },
+        {
+          path: '/blog/treasurechest',
+          name: 'treasurechest',
+          component: () => import('../views/treasurechestView.vue'),
+        },
+        {
+          path: '/blog/ha-fastbrowsing',
+          name: 'fastbrowsing',
+          component: () => import('../views/fastbrowsing.vue'),
+        }
       ],
     },
     {
       path: '/base',
       name: 'base',
       component: () => import('../views/MainBaseView.vue'),
-      children:[
+      children: [
         {
           path: '/main',
           name: 'main',
@@ -45,7 +65,11 @@ const router = createRouter({
         },
       ]
     },
-   
+    {
+      path: '/live2d',
+      name: 'live2d',
+      component: () => import('../components/blog/live2dtest.vue'),
+    }
   ],
 })
 

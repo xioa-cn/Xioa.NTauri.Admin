@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { NButton } from 'naive-ui'
 import BlogIndexLeftRecommend from '@/components/blog/blogIndexLeftRecommend.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const goView = (path: string) => {
+    router.push(path)
+}
+
 </script>
 
 <template>
+
+
     <div class="card-container">
         <div class="blog-info-card">
             <div class="avatar-container">
@@ -29,10 +39,10 @@ import BlogIndexLeftRecommend from '@/components/blog/blogIndexLeftRecommend.vue
 
         <blog-index-left-recommend />
         
-        <div class="card poetize">
+        <div class="card poetize" @click="goView('/blog/ha-fastbrowsing')">
             <div class="card-title">速览</div>
-            <div class="card-content">POETIZE</div>
-            <div class="card-subtitle">最美博客</div>
+            <div class="card-content">XIOA</div>
+            <div class="card-subtitle">博客</div>
         </div>
 
         <div class="card life">

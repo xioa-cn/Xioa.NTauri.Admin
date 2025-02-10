@@ -2,10 +2,12 @@
 import { NIcon } from 'naive-ui'
 import { BookOutline } from '@vicons/ionicons5'
 import { useRecommend } from '@/hooks/useRecommend'
+import { useLookBlog } from '@/hooks/uselookblog'
 
 const { recommendList } = useRecommend()
-
+const { goBlogContent } = useLookBlog()
 </script>
+
 
 <template>
   <div class="recommend-container">
@@ -15,11 +17,9 @@ const { recommendList } = useRecommend()
       </n-icon>
       <span class="header-text">推荐文章</span>
     </div>
-    
+
     <div class="article-list">
-      <div v-for="(item, index) in recommendList" 
-           :key="index" 
-           class="article-item">
+      <div v-for="(item, index) in recommendList" :key="index" class="article-item" @click="goBlogContent(item.id)">
         <img :src="item.image" class="article-image">
         <div class="article-info">
           <div class="article-title">{{ item.title }}</div>
@@ -32,7 +32,7 @@ const { recommendList } = useRecommend()
 
 <style scoped>
 .recommend-container {
-  
+
   background: white;
   border-radius: 12px;
   padding: 16px;

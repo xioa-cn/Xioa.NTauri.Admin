@@ -9,10 +9,11 @@ const { goRouter } = useBlogHeaderRouter()
 <template>
     <header class="app-header">
         <div class="header-left  titlebar drag-region">
-            <img src="../../assets/blog/blog.svg" alt="POETIZE" class="logo">
+            <!-- <img src="../../assets/blog/blog.svg" alt="POETIZE" class="logo"> -->
+            <h2 class="drag-area AwesomeFont blog-headerfont">NTauri</h2>
         </div>
         <nav class="header-nav blog-headerfont">
-            <div class="blog-header-btn" @click="goRouter('/首页')">
+            <div class="blog-header-btn" @click="goRouter('/blog')">
                 🏡 <span>首页</span>
             </div>
             <div class="blog-header-btn" @click="goRouter('/喜欢')">
@@ -24,10 +25,10 @@ const { goRouter } = useBlogHeaderRouter()
             <div class="blog-header-btn" @click="goRouter('/记录')">
                 📸 <span>记录</span>
             </div>
-            <div class="blog-header-btn" @click="goRouter('/百宝箱')">
+            <div class="blog-header-btn" @click="goRouter('/blog/treasurechest')">
                 🧰 <span>百宝箱</span>
             </div>
-            <div class="blog-header-btn" @click="goRouter('/留言')">
+            <div class="blog-header-btn" @click="goRouter('/blog/leavemessage')">
                 🌏 <span>留言</span>
             </div>
             <div class="blog-header-btn" @click="goRouter('/联系我')">
@@ -67,6 +68,10 @@ const { goRouter } = useBlogHeaderRouter()
 
 .header-left {
     flex-shrink: 0;
+}
+
+.drag-area{
+    min-width: 300px;
 }
 
 .logo {

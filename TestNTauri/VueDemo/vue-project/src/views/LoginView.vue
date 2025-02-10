@@ -1,23 +1,9 @@
 <script setup lang="ts">
 import LoginForm from '@/components/login/LoginForm.vue';
-import { ref, onMounted } from 'vue';
-const backgroundImages = [
-    '/0.jpg',
-    '/2.jpg',
-    '/6.jpg',
-    '/9.jpg'
-];
+import { onMounted } from 'vue';
+import { useRandomImg } from '@/hooks/useRandomImg';
 
-function getRandomBackground(): string {
-    const randomIndex = Math.floor(Math.random() * backgroundImages.length);
-    return backgroundImages[randomIndex];
-}
-
-const backgroundImage = ref('/9.jpg');
-
-const refreshBackground = () => {
-    backgroundImage.value = getRandomBackground();
-}
+const { backgroundImage, refreshBackground } = useRandomImg();
 
 onMounted(() => {
     refreshBackground();

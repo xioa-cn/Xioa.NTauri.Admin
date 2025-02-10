@@ -1,0 +1,38 @@
+.blog-title-container {
+    padding: 20px;
+  
+    color: var(--color-text);
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .blog-main-title {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0);
+  }
+  
+  .blog-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 0.9em;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .blog-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .author {
+    font-weight: bold;
+  }
+  
+  /* 添加悬停效果 */
+  .blog-meta span:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+  }

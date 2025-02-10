@@ -7,7 +7,7 @@ export function useBlogHeaderRouter() {
 
     const goRouter = (path: string) => {
         message.info(path)
-        //router.push(path)
+        router.push(path)
     }
 
     return {
