@@ -1,5 +1,10 @@
 {
   "files": [],
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment"
+  },
   "references": [
     {
       "path": "./tsconfig.node.json"

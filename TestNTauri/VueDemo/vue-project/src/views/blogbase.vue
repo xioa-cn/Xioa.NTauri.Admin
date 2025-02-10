@@ -72,7 +72,6 @@ const toggleActions = () => {
                     </transition>
                 </router-view>
             </div>
-
         </main>
         <div class="wave-container">
             <live2dtest />
@@ -265,12 +264,15 @@ const toggleActions = () => {
 </style>
 <style scoped>
 .wave-container {
-    position: relative;
+    position: absolute;
+    right: 0;
     height: 100px;
     width: 100%;
-    background: #fff;
+    background: transparent;
     overflow: hidden;
 }
+
+
 
 .wave {
     position: absolute;

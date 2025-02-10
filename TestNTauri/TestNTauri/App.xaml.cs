@@ -40,7 +40,7 @@ namespace TestNTauri
             WebView = new AppWindowsWebView();
             await WebView.StartupVueServer(
                 AppConfig.VueProjectPath, StartupMode.DevServer, AppConfig.VueDevServerPort,
-                ViewModelLocator.ViewModelsMethods,true);
+                ViewModelLocator.ViewModelsMethods,false);
             
             base.OnStartup(e);
         }
