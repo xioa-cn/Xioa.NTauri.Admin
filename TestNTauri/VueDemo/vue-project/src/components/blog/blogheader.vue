@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { NButton } from 'naive-ui'
+import { NButton,NAvatar } from 'naive-ui'
 import { useblogLogin } from '@/hooks/useblogLogin'
 import { useBlogHeaderRouter } from '@/hooks/useblogheaderrouter'
-import {useWPFHeader} from "@/hooks/useWPFHeader.ts";
+import { useWPFHeader } from "@/hooks/useWPFHeader.ts";
+import { useBlogHeaderShow } from '@/hooks/useblogheadershow';
 
 const { gologin } = useblogLogin()
 const { goRouter } = useBlogHeaderRouter()
 const { header } = useWPFHeader()
+const { isShowAvatar } = useBlogHeaderShow()
 </script>
 <template>
     <header class="app-header">
@@ -24,7 +26,7 @@ const { header } = useWPFHeader()
             <div class="blog-header-btn" @click="goRouter('/blog/list?key=like')">
                 ❤️ <span>喜欢</span>
             </div>
-            <div class="blog-header-btn" @click="goRouter('/随笔')">
+            <div class="blog-header-btn" @click="goRouter('/blog/write')">
                 💬 <span>随笔</span>
             </div>
             <div class="blog-header-btn" @click="goRouter('/blog/treasurechest')">
@@ -38,9 +40,11 @@ const { header } = useWPFHeader()
             </div>
         </nav>
         <div class="header-right blog-headerfont">
-            <n-button @click="gologin" class="login-btn blog-header-btn" >
+            <n-button v-if="!isShowAvatar" @click="gologin" class="login-btn blog-header-btn">
                 登录
             </n-button>
+            <n-avatar v-if="isShowAvatar" round size="large" class="blog-header-avator" src="empty.png"
+                fallback-src="/header.jpg" />
         </div>
     </header>
 </template>
@@ -49,6 +53,20 @@ const { header } = useWPFHeader()
 
 <style scoped>
 @import '@/assets/blog/blogfont.css';
+
+.blog-header-avator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto 0;  /* 上下margin自动 */
+    cursor: pointer;
+}
+
+/* 可选：添加悬浮效果 */
+.blog-header-avator:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
 
 .app-header {
     position: fixed;
@@ -72,7 +90,7 @@ const { header } = useWPFHeader()
     flex-shrink: 0;
 }
 
-.drag-area{
+.drag-area {
     min-width: 300px;
 }
 
@@ -127,6 +145,7 @@ const { header } = useWPFHeader()
 }
 
 .blog-header-btn:hover {
-    color: #FFD700; /* 鼠标悬停时变成金黄色 */
+    color: #FFD700;
+    /* 鼠标悬停时变成金黄色 */
 }
 </style>

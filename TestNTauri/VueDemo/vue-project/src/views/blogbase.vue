@@ -8,7 +8,7 @@ import {
     ChevronUpOutline,
     HomeOutline,
     CloseOutline,
-    RepeatOutline, RemoveOutline
+    RepeatOutline, RemoveOutline, ArrowRedoOutline,AttachOutline
 } from '@vicons/ionicons5'
 import { useWebViewWindow } from '@/hooks/useWebViewWindow';
 import { useblogIndexGoHome } from '@/hooks/useblogIndexGoHome';
@@ -16,12 +16,14 @@ import { useNoneUserToLogin } from "@/hooks/useNoneUserToLogin.ts";
 import live2dtest from '@/components/blog/live2dtest.vue'
 import blogfooter from '@/components/blog/blogfooter.vue'
 import { useBlogShowHb } from '@/hooks/useblogshowhb'
+import { useRoutergoBase } from '@/hooks/useRoutergoBase'
+import { useLoginout } from '@/hooks/useLoginout'
 
 const { getText } = useblogHeaderText()
 const text = ref<string>('')
 const showActions = ref(false)
 const { goHome } = useblogIndexGoHome()
-
+const { loginout } = useLoginout()
 const { isCanReader } = useNoneUserToLogin()
 // 本地状态
 
@@ -34,7 +36,7 @@ const { handleMinimize, handleMaximize, handleClose } = useWebViewWindow();
 const toggleActions = () => {
     showActions.value = !showActions.value
 }
-
+const { goBack } = useRoutergoBase()
 </script>
 <template>
     <div class="base-layout">
@@ -81,6 +83,14 @@ const toggleActions = () => {
                     </template>
                 </n-button>
 
+                <n-button @click="goBack" circle color="#8FBC8F" class="action-btn">
+                    <template #icon>
+                        <n-icon>
+                            <ArrowRedoOutline />
+                        </n-icon>
+                    </template>
+                </n-button>
+
                 <n-button @click="handleMinimize" circle color="#8a2be2" class="action-btn">
                     <template #icon>
                         <n-icon>
@@ -93,6 +103,14 @@ const toggleActions = () => {
                     <template #icon>
                         <n-icon>
                             <RepeatOutline />
+                        </n-icon>
+                    </template>
+                </n-button>
+
+                <n-button @click="loginout" circle color="#FFB6C1" class="action-btn">
+                    <template #icon>
+                        <n-icon>
+                            <AttachOutline />
                         </n-icon>
                     </template>
                 </n-button>
