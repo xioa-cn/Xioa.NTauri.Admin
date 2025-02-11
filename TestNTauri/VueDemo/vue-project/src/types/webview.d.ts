@@ -14,5 +14,6 @@ declare global {
         addEventListener(type: string, listener: (event: any) => void): void;
       };
     };
+    PIXI: any;
   }
 }
