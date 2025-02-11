@@ -23,12 +23,11 @@ namespace TestNTauri
 
         public static AppWindowsWebView WebView { get; private set; }
         protected override async void OnStartup(StartupEventArgs e) {
-            new DeepSeekService();
+            //new DeepSeekService();
             // 设置全局异常处理
             AppDomain.CurrentDomain.UnhandledException += (s, args) =>
             {
                 Console.WriteLine(args.ExceptionObject.ToString());
-               
             };
 
             Current.DispatcherUnhandledException += (s, args) =>
@@ -36,8 +35,6 @@ namespace TestNTauri
                 Console.WriteLine(args.Exception.ToString());
                 //args.Handled = true;
             };
-
-            
             
             WebView = new AppWindowsWebView();
             await WebView.StartupVueServer(

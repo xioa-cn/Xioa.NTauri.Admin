@@ -12,7 +12,9 @@ import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NButton, NIcon
 import Header from '@/components/main/header.vue'
 import { useRoot } from '@/hooks/useRoot';
 import { useWebViewWindow } from '@/hooks/useWebViewWindow';
+import { useThemes } from '@/hooks/useThemes';
 
+const {ThemeOverrides} = useThemes();
 const { isMaximized, handleMinimize, handleMaximize, handleClose } = useWebViewWindow();
 
 const root = useRoot();
@@ -20,7 +22,7 @@ const root = useRoot();
 </script>
 
 <template>
-  <n-config-provider class="app-container">
+  <n-config-provider class="app-container" :theme-overrides="ThemeOverrides">
    
       <n-layout>
         <n-layout-header class="header">

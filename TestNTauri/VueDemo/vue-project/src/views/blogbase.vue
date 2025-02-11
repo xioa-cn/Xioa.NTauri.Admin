@@ -13,9 +13,9 @@ import {
 import { useWebViewWindow } from '@/hooks/useWebViewWindow';
 import { useblogIndexGoHome } from '@/hooks/useblogIndexGoHome';
 import { useNoneUserToLogin } from "@/hooks/useNoneUserToLogin.ts";
-import { type RouteLocationNormalizedLoaded } from 'vue-router';
 import live2dtest from '@/components/blog/live2dtest.vue'
 import blogfooter from '@/components/blog/blogfooter.vue'
+import { useBlogShowHb } from '@/hooks/useblogshowhb'
 
 const { getText } = useblogHeaderText()
 const text = ref<string>('')
@@ -24,24 +24,12 @@ const { goHome } = useblogIndexGoHome()
 
 const { isCanReader } = useNoneUserToLogin()
 // 本地状态
-const localBanner = ref<boolean>(true)
 
 onMounted(() => {
     text.value = getText();
     isCanReader();
 })
-function shouldAnimate(route: RouteLocationNormalizedLoaded) {
-    console.log(route.path)
-    if (route.path === '/blog' || route.path.includes('/blog/content')
-        || route.path.includes('/blog/ha-')) {
-        localBanner.value = true
-        return true
-    } else {
-        localBanner.value = false
-        return true
-    }
-
-}
+const { localBanner, localFooter, shouldAnimate } = useBlogShowHb()
 const { handleMinimize, handleMaximize, handleClose } = useWebViewWindow();
 const toggleActions = () => {
     showActions.value = !showActions.value
@@ -73,13 +61,13 @@ const toggleActions = () => {
                     </transition>
                 </router-view>
 
-                <blogfooter v-if="localBanner"/>
+                <blogfooter v-if="localFooter" />
             </div>
         </main>
         <div class="wave-container">
             <KeepAlive>
                 <live2dtest />
-            </KeepAlive> 
+            </KeepAlive>
         </div>
 
         <!-- 添加固钉按钮组 -->
@@ -273,13 +261,9 @@ const toggleActions = () => {
     right: 0;
     height: 100px;
     width: 100%;
-    
+
     overflow: hidden;
 }
-
-
-
-
 </style>
 <style scoped>
 .float-buttons {

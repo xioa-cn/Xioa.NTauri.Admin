@@ -38,6 +38,22 @@ const router = createRouter({
           path: '/blog/ha-fastbrowsing',
           name: 'fastbrowsing',
           component: () => import('../views/fastbrowsing.vue'),
+        },
+        {
+          path: '/blog/list',
+          name: 'bloglist',
+          component: () => import('../views/bloglist.vue'),
+          props: (route) => ({ key: route.query.key })
+        },
+        {
+          path: '/blog/contactus',
+          name: 'contactus',
+          component: () => import('../views/contactus.vue'),
+        },
+        {
+          path: '/blog/main',
+          name: 'blogmain',
+          component: () => import('../views/blogmain.vue'),
         }
       ],
     },

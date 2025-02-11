@@ -18,14 +18,14 @@ const { header } = useWPFHeader()
             <div class="blog-header-btn" @click="goRouter('/blog')">
                 🏡 <span>首页</span>
             </div>
-            <div class="blog-header-btn" @click="goRouter('/喜欢')">
+            <div class="blog-header-btn" @click="goRouter('/blog/main')">
+                📚 <span>博客</span>
+            </div>
+            <div class="blog-header-btn" @click="goRouter('/blog/list?key=like')">
                 ❤️ <span>喜欢</span>
             </div>
             <div class="blog-header-btn" @click="goRouter('/随笔')">
                 💬 <span>随笔</span>
-            </div>
-            <div class="blog-header-btn" @click="goRouter('/记录')">
-                📸 <span>记录</span>
             </div>
             <div class="blog-header-btn" @click="goRouter('/blog/treasurechest')">
                 🧰 <span>百宝箱</span>
@@ -33,7 +33,7 @@ const { header } = useWPFHeader()
             <div class="blog-header-btn" @click="goRouter('/blog/leavemessage')">
                 🌏 <span>留言</span>
             </div>
-            <div class="blog-header-btn" @click="goRouter('/联系我')">
+            <div class="blog-header-btn" @click="goRouter('/blog/contactus')">
                 👤 <span>联系我</span>
             </div>
         </nav>

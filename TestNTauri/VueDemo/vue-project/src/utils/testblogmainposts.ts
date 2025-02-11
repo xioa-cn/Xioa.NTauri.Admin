@@ -1,6 +1,6 @@
+import type { BlogPost } from '@/types/blogfastpost'
 
-import type { BlogPost } from '@/types/blogPosttype'
-export const blogIndexData: BlogPost[] = [
+export const blogposts: BlogPost[] = [
     {
         id: 1,
         date: '2025-02-09',
@@ -100,4 +100,85 @@ export const blogIndexData: BlogPost[] = [
         category: '技术博客',
         coverImage: '/1.webp'
     },
+    {
+        id: 12,
+        date: '2025-01-29',
+        title: '美食探店记',
+        subtitle: '寻找城市味道',
+        viewCount: 167,
+        category: '生活倒影',
+        coverImage: '/2.jpg'
+    },
+    {
+        id: 13,
+        date: '2025-01-28',
+        title: '电影推荐 - 科幻篇',
+        subtitle: '震撼视觉盛宴',
+        viewCount: 289,
+        category: '视听盛宴',
+        coverImage: '/3.webp'
+    },
+    {
+        id: 14,
+        date: '2025-01-27',
+        title: 'AI 开发实战',
+        subtitle: '人工智能应用案例',
+        viewCount: 398,
+        category: '技术博客',
+        coverImage: '/4.jpg'
+    },
+    {
+        id: 15,
+        date: '2025-01-26',
+        title: '读书笔记分享',
+        subtitle: '与书籍对话',
+        viewCount: 156,
+        category: '视听盛宴',
+        coverImage: '/5.jpg'
+    },
+    {
+        id: 16,
+        date: '2025-01-25',
+        title: '微服务架构设计',
+        subtitle: '分布式系统实践',
+        viewCount: 342,
+        category: '技术博客',
+        coverImage: '/6.jpg'
+    },
+    {
+        id: 17,
+        date: '2025-01-24',
+        title: '健身运动指南',
+        subtitle: '科学健身方法',
+        viewCount: 198,
+        category: '生活倒影',
+        coverImage: '/7.jpg'
+    },
+    {
+        id: 18,
+        date: '2025-01-23',
+        title: '免费资源合集',
+        subtitle: '优质资源分享',
+        viewCount: 467,
+        category: '资源',
+        coverImage: '/8.jpg'
+    },
+    {
+        id: 19,
+        date: '2025-01-22',
+        title: 'CSS 动画技巧',
+        subtitle: '网页动效开发',
+        viewCount: 245,
+        category: '技术博客',
+        coverImage: '/9.jpg'
+    },
+    {
+        id: 20,
+        date: '2025-01-21',
+        title: '咖啡馆探店记',
+        subtitle: '城市咖啡地图',
+        viewCount: 178,
+        category: '生活倒影',
+        coverImage: '/0.jpg'
+    }
 ]

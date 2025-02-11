@@ -8,6 +8,7 @@ export interface BlogPost {
     category?: string;
     tags?: string[];
     image?: string;
-
-
+    subtitle?: string;
+    viewCount?: number;
+    coverImage?: string;
 }

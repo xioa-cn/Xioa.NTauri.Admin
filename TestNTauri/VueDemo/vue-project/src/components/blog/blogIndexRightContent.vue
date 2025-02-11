@@ -19,7 +19,7 @@ const { goBlogContent } = useLookBlog()
   <div class="blog-list">
     <div v-for="post in blogPosts" @click="goBlogContent(post.id)" :key="post.title" class="blog-card">
       <div class="blog-card-image">
-        <img :src="post.image" :alt="post.title">
+        <img :src="post.coverImage" :alt="post.title">
       </div>
       <div class="blog-card-content">
         <div class="post-meta">
