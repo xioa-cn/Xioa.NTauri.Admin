@@ -6,7 +6,6 @@ export function useBlogHeaderRouter() {
     const message = useMessage()
 
     const goRouter = (path: string) => {
-        message.info(path)
         router.push(path)
     }
 

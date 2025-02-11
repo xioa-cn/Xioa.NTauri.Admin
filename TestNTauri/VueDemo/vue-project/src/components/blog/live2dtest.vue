@@ -13,9 +13,10 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { Application } from 'pixi.js'
 import * as PIXI from 'pixi.js'
 import { Live2DModel } from 'pixi-live2d-display'
+import { useLive2dState } from '@/stores/live2dstore'
+(window as any).PIXI = PIXI
 
-;(window as any).PIXI = PIXI
-
+const live2dstore = useLive2dState()
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 let app: Application
 let model: any
@@ -37,7 +38,7 @@ const messages = {
 // 显示消息的函数
 const showMessageBubble = (text: string, duration = 3000) => {
     console.log('Showing message:', text)
-    
+
     // 如果存在之前的计时器，清除它
     if (hideMessageTimer) {
         clearTimeout(hideMessageTimer)
@@ -60,6 +61,7 @@ onBeforeUnmount(() => {
         clearTimeout(hideMessageTimer)
     }
     if (cleanup) {
+        console.log('cleanup-2d')
         cleanup()
     }
 })
@@ -81,7 +83,7 @@ onMounted(async () => {
     try {
         model = await Live2DModel.from('/l2/miara_pro_t03.model3.json')
         app.stage.addChild(model)
-        
+
         model.anchor.set(0.5, 0.5)
         model.scale.set(0.1)
         const centerX = app.screen.width / 2
@@ -99,8 +101,11 @@ onMounted(async () => {
 
         // 播放初始动作并显示欢迎消息
         model.motion('Idle')
-        showMessageBubble('欢迎来到我的博客！')
-
+        console.log(live2dstore.live2d)
+        if (live2dstore.live2d) {
+            showMessageBubble('欢迎来到我的博客！')
+            live2dstore.live2d = false
+        }
         cleanup = () => {
             if (app) {
                 app.destroy(true)
@@ -138,7 +143,8 @@ onMounted(async () => {
     bottom: 110%;
     right: 30%;
     transform: translateX(-50%);
-    background: #FFD700;  /* 金色背景 */
+    background: #FFD700;
+    /* 金色背景 */
     padding: 10px 15px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -146,10 +152,12 @@ onMounted(async () => {
     pointer-events: none;
     animation: fadeIn 0.3s ease-out;
     z-index: 1001;
-    color: #8B4513;  /* 深棕色文字，更容易阅读 */
+    color: #8B4513;
+    /* 深棕色文字，更容易阅读 */
     font-size: 14px;
     letter-spacing: 1px;
-    border: 2px solid rgba(218, 165, 32, 0.6);  /* 半透明金色边框 */
+    border: 2px solid rgba(218, 165, 32, 0.6);
+    /* 半透明金色边框 */
 }
 
 .message-bubble::after {
@@ -160,14 +168,17 @@ onMounted(async () => {
     transform: translateX(-50%);
     border-width: 10px;
     border-style: solid;
-    border-color: #FFD700 transparent transparent transparent;  /* 金色箭头 */
+    border-color: #FFD700 transparent transparent transparent;
+    /* 金色箭头 */
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateX(-50%) translateY(10px);  /* 从下往上的动画 */
+        transform: translateX(-50%) translateY(10px);
+        /* 从下往上的动画 */
     }
+
     to {
         opacity: 1;
         transform: translateX(-50%) translateY(0);

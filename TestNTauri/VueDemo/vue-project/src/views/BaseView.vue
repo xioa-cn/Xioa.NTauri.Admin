@@ -99,7 +99,7 @@ const shouldAnimate = (route: RouteLocationNormalizedLoaded) => {
 /* 时空隧道动画 */
 .space-tunnel-enter-active,
 .space-tunnel-leave-active {
-    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
     position: absolute;
     width: 100%;
     transform-style: preserve-3d;

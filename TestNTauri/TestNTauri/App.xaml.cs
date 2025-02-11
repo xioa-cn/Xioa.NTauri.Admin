@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using NTauri.WPF.Models;
 using NTauri.WPF.Window;
+using TestNTauri.Services;
 using TestNTauri.ViewModels;
 
 namespace TestNTauri
@@ -22,6 +23,7 @@ namespace TestNTauri
 
         public static AppWindowsWebView WebView { get; private set; }
         protected override async void OnStartup(StartupEventArgs e) {
+            new DeepSeekService();
             // 设置全局异常处理
             AppDomain.CurrentDomain.UnhandledException += (s, args) =>
             {

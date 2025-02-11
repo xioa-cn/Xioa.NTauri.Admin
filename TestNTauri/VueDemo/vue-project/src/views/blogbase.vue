@@ -15,6 +15,7 @@ import { useblogIndexGoHome } from '@/hooks/useblogIndexGoHome';
 import { useNoneUserToLogin } from "@/hooks/useNoneUserToLogin.ts";
 import { type RouteLocationNormalizedLoaded } from 'vue-router';
 import live2dtest from '@/components/blog/live2dtest.vue'
+import blogfooter from '@/components/blog/blogfooter.vue'
 
 const { getText } = useblogHeaderText()
 const text = ref<string>('')
@@ -71,10 +72,14 @@ const toggleActions = () => {
                         <component :is="Component" />
                     </transition>
                 </router-view>
+
+                <blogfooter v-if="localBanner"/>
             </div>
         </main>
         <div class="wave-container">
-            <live2dtest />
+            <KeepAlive>
+                <live2dtest />
+            </KeepAlive> 
         </div>
 
         <!-- 添加固钉按钮组 -->

@@ -5,9 +5,11 @@ import type { LoginParams, LoginClass, LoginResult } from '@/types/logintypes';
 import { webviewInvoke } from '@/utils/webviewMethods';
 import { getLoginSwitch } from '@/utils/loginswitch';
 import { useUserStore } from "@/stores/userstore.ts";
+import { useLive2dState } from '@/stores/live2dstore';
 
 export default function useLogin() {
     const message = useMessage();
+    const live2dstore = useLive2dState()
     const router = useRouter();
     const loginParams = ref<LoginParams>({
         username: '',
@@ -27,6 +29,8 @@ export default function useLogin() {
         } else {
             message.error(result?.message);
         }
+        //重置live2d
+        live2dstore.live2d = true
         message.success('登录成功');
     }
 

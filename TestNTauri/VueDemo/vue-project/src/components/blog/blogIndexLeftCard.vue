@@ -41,26 +41,26 @@ const goView = (path: string) => {
         
         <div class="card poetize" @click="goView('/blog/ha-fastbrowsing')">
             <div class="card-title">速览</div>
-            <div class="card-content">XIOA</div>
+            <div class="card-content">开发技术</div>
             <div class="card-subtitle">博客</div>
         </div>
 
         <div class="card life">
             <div class="card-title">速览</div>
-            <div class="card-content">生活随影</div>
-            <div class="card-subtitle">记录美好生活</div>
+            <div class="card-content">资源共享</div>
+            <div class="card-subtitle">博客</div>
         </div>
 
         <div class="card video">
             <div class="card-title">速览</div>
-            <div class="card-content">视听盛宴</div>
-            <div class="card-subtitle">听音乐、看书、看电影</div>
+            <div class="card-content">生活倒影</div>
+            <div class="card-subtitle">博客</div>
         </div>
 
         <div class="card resource">
             <div class="card-title">速览</div>
-            <div class="card-content">资源</div>
-            <div class="card-subtitle">专业有趣的资源</div>
+            <div class="card-content">阅读</div>
+            <div class="card-subtitle">博客</div>
         </div>
     </div>
 </template>
