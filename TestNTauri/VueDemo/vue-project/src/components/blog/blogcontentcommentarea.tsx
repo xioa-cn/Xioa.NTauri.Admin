@@ -18,9 +18,9 @@ export default defineComponent({
           return 'user-tag tag-svip'
         case 'VIP':
           return 'user-tag tag-vip'
-        case '全身场':
+        case 'NL':
           return 'user-tag tag-svip'
-        case '管理员':
+        case 'NOR':
           return 'user-tag tag-admin'
         default:
           return 'user-tag tag-normal'

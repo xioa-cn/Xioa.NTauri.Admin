@@ -4,7 +4,7 @@ import '@/assets/blog/terasurechestheader.css'
 export default defineComponent({
   name: 'TreasureChestHeader',
   setup() {
-    const videoSource = '/te.mp4' // 替换为实际的视频路径
+    const videoSource = '/te.mp4' 
 
     return () => (
       <div class="header-container">

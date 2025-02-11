@@ -268,47 +268,13 @@ const toggleActions = () => {
     right: 0;
     height: 100px;
     width: 100%;
-    background: transparent;
+    
     overflow: hidden;
 }
 
 
 
-.wave {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 200%;
-    height: 100px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%23FFFFFF'/%3E%3C/svg%3E");
-    background-position: 0 bottom;
-    transform-origin: center bottom;
-}
 
-.wave1 {
-    animation: wave-animation 12s linear infinite;
-    opacity: 1;
-}
-
-.wave2 {
-    animation: wave-animation 8s linear infinite;
-    opacity: 0.75;
-}
-
-.wave3 {
-    animation: wave-animation 4s linear infinite;
-    opacity: 0.5;
-}
-
-@keyframes wave-animation {
-    0% {
-        transform: translateX(0) translateZ(0);
-    }
-
-    100% {
-        transform: translateX(-50%) translateZ(0);
-    }
-}
 </style>
 <style scoped>
 .float-buttons {

@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <script src="./public/live2dcubismcore.min.js"></script>
     <script src="./public/live2d.min.js"></script>
-    <!-- 添加这两行 -->
+    <!-- 或者添加这两行 -->
     <!--  <script src="https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js"></script>-->
     <!--  <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>-->
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
+    <title>NTAURI-WEB</title>
     <style>
         .particle {
             position: fixed;
@@ -30,52 +30,101 @@
                 opacity: 0;
             }
         }
+
+        /* 添加加载动画样式 */
+        #loading-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 淡出动画 */
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 
 <body>
-<div id="app"></div>
-<script type="module" src="/src/main.ts"></script>
-<script>
-    document.addEventListener('click', function (e) {
-        const colors = ['#FF69B4', '#4169E1', '#32CD32', '#FFD700']; // 粉、蓝、绿、黄
-        const particleCount = 12; // 每次点击产生的粒子数量
+    <!-- 添加加载动画 -->
+    <div id="loading-wrapper">
+        <div class="loading-spinner"></div>
+    </div>
 
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <script>
+        // 页面加载完成后移除加载动画
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loading-wrapper');
+            loader.classList.add('fade-out');
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500);
+        });
 
-            // 随机大小
-            const size = Math.random() * 8 + 4;
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
+        document.addEventListener('click', function (e) {
+            const colors = ['#FF69B4', '#4169E1', '#32CD32', '#FFD700']; // 粉、蓝、绿、黄
+            const particleCount = 12; // 每次点击产生的粒子数量
 
-            // 随机颜色
-            particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
 
-            // 设置初始位置为点击位置
-            particle.style.left = `${e.clientX}px`;
-            particle.style.top = `${e.clientY}px`;
+                // 随机大小
+                const size = Math.random() * 8 + 4;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
 
-            // 随机角度和距离
-            const angle = (i / particleCount) * 360 * (Math.PI / 180);
-            const velocity = Math.random() * 80 + 50;
-            const x = Math.cos(angle) * velocity;
-            const y = Math.sin(angle) * velocity;
+                // 随机颜色
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
-            // 设置移动距离
-            particle.style.setProperty('--x', `${x}px`);
-            particle.style.setProperty('--y', `${y}px`);
+                // 设置初始位置为点击位置
+                particle.style.left = `${e.clientX}px`;
+                particle.style.top = `${e.clientY}px`;
 
-            document.body.appendChild(particle);
+                // 随机角度和距离
+                const angle = (i / particleCount) * 360 * (Math.PI / 180);
+                const velocity = Math.random() * 80 + 50;
+                const x = Math.cos(angle) * velocity;
+                const y = Math.sin(angle) * velocity;
 
-            // 动画结束后移除粒子
-            particle.addEventListener('animationend', () => {
-                particle.remove();
-            });
-        }
-    });
-</script>
+                // 设置移动距离
+                particle.style.setProperty('--x', `${x}px`);
+                particle.style.setProperty('--y', `${y}px`);
+
+                document.body.appendChild(particle);
+
+                // 动画结束后移除粒子
+                particle.addEventListener('animationend', () => {
+                    particle.remove();
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

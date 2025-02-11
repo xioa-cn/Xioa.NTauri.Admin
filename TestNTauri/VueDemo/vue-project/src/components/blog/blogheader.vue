@@ -2,15 +2,17 @@
 import { NButton } from 'naive-ui'
 import { useblogLogin } from '@/hooks/useblogLogin'
 import { useBlogHeaderRouter } from '@/hooks/useblogheaderrouter'
+import {useWPFHeader} from "@/hooks/useWPFHeader.ts";
 
 const { gologin } = useblogLogin()
 const { goRouter } = useBlogHeaderRouter()
+const { header } = useWPFHeader()
 </script>
 <template>
     <header class="app-header">
         <div class="header-left  titlebar drag-region">
-            <!-- <img src="../../assets/blog/blog.svg" alt="POETIZE" class="logo"> -->
-            <h2 class="drag-area AwesomeFont blog-headerfont">NTauri</h2>
+            <!-- <img src="../../assets/blog/blog.svg" alt="XIOA" class="logo"> -->
+            <h2 class="drag-area AwesomeFont blog-headerfont">{{ header }}</h2>
         </div>
         <nav class="header-nav blog-headerfont">
             <div class="blog-header-btn" @click="goRouter('/blog')">

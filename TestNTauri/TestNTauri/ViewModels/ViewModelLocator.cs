@@ -9,5 +9,6 @@ public class ViewModelLocator {
 
     private static void InitializedComponents() {
         ViewModelsMethods.Add("loginService", new LoginService());
+        ViewModelsMethods.Add("HeaderService", new HeaderViewModel());
     }
 }
