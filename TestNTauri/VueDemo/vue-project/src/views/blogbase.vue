@@ -8,7 +8,7 @@ import {
     ChevronUpOutline,
     HomeOutline,
     CloseOutline,
-    RepeatOutline, RemoveOutline, ArrowRedoOutline,AttachOutline
+    RepeatOutline, RemoveOutline, ArrowRedoOutline, AttachOutline
 } from '@vicons/ionicons5'
 import { useWebViewWindow } from '@/hooks/useWebViewWindow';
 import { useblogIndexGoHome } from '@/hooks/useblogIndexGoHome';
@@ -66,11 +66,11 @@ const { goBack } = useRoutergoBase()
                 <blogfooter v-if="localFooter" />
             </div>
         </main>
-        <div class="wave-container">
-            <KeepAlive>
-                <live2dtest />
-            </KeepAlive>
-        </div>
+        <!-- <div class="wave-container"> -->
+
+            <live2dtest />
+
+        <!-- </div> -->
 
         <!-- 添加固钉按钮组 -->
         <div class="float-buttons" :class="{ 'show-actions': showActions }">
@@ -278,8 +278,8 @@ const { goBack } = useRoutergoBase()
     position: absolute;
     right: 0;
     height: 100px;
-    width: 100%;
-
+    
+    background-color: rebeccapurple;
     overflow: hidden;
 }
 </style>

@@ -38,7 +38,7 @@
 
           <!-- 链接 -->
           <p v-else-if="item.type === 'link'" class="reference">
-            请访问：<a :href="item.url" class="link">{{ item.text }}</a>
+            <a :href="item.url" class="link">{{ item.text }}</a>
           </p>
 
           <!-- 列表 -->

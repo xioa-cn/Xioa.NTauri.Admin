@@ -1,6 +1,6 @@
 <template>
     <div class="live2d-container">
-        <canvas ref="canvasRef"></canvas>
+        <canvas  ref="canvasRef"></canvas>
         <!-- 气泡框 -->
         <div class="message-bubble" v-if="showMessage">
             {{ currentMessage }}
@@ -71,8 +71,8 @@ onMounted(async () => {
 
     app = new Application({
         view: canvasRef.value,
-        width: 500,
-        height: 500,
+        width: 350,
+        height: 350,
         backgroundColor: 0x00000000,
         antialias: true,
         transparent: true,
@@ -84,7 +84,7 @@ onMounted(async () => {
         model = await Live2DModel.from('/l2/miara_pro_t03.model3.json')
         app.stage.addChild(model)
 
-        model.anchor.set(0.5, 0.5)
+        model.anchor.set(1.0, 0.5)
         model.scale.set(0.1)
         const centerX = app.screen.width / 2
         const centerY = app.screen.height / 2
@@ -124,6 +124,7 @@ onMounted(async () => {
     z-index: 1000;
     pointer-events: none;
     background: transparent;
+    background-color: transparent;
     width: 350px;
     height: 350px;
     bottom: -140px;
@@ -140,8 +141,8 @@ onMounted(async () => {
 
 .message-bubble {
     position: absolute;
-    bottom: 110%;
-    right: 30%;
+    bottom: 90%;
+    right: 40%;
     transform: translateX(-50%);
     background: #FFD700;
     /* 金色背景 */
